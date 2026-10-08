@@ -1,11 +1,11 @@
-# Laravel na Vercel (container + FrankenPHP), com Postgres.
+# Laravel na Vercel (container + FrankenPHP), com MySQL.
 # Baseado no guia oficial: https://vercel.com/kb/guide/laravel-php-with-docker
 
 FROM dunglas/frankenphp:1-php8.4-bookworm AS base
 
-# pdo_pgsql para o Postgres (Neon, Supabase etc.)
+# pdo_mysql para o MySQL (TiDB Cloud, PlanetScale etc.)
 RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
-    && install-php-extensions intl zip pdo_pgsql
+    && install-php-extensions intl zip pdo_mysql
 
 WORKDIR /app
 
@@ -36,8 +36,17 @@ RUN mkdir -p \
         bootstrap/cache \
     && composer dump-autoload --no-dev --classmap-authoritative
 
+# Variáveis VITE_* entram no build do front (o .env não vai para a imagem)
+ENV VITE_APP_NAME="Diário de Cuidados"
+
 # Compila os assets (Vite) se o projeto tiver package.json; depois descarta node_modules
-RUN if [ -f package.json ]; then npm ci && npm run build && rm -rf node_modules; fi
+# (npm install funciona com ou sem package-lock.json)
+RUN set -e; \
+    if [ -f package.json ]; then \
+      npm install --no-audit --no-fund; \
+      npm run build; \
+      rm -rf node_modules; \
+    fi
 
 # Caches que não dependem de variáveis de ambiente (NÃO use config:cache aqui)
 RUN php artisan event:cache && php artisan view:cache
