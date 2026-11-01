@@ -14,11 +14,6 @@ FROM base AS dependencies
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Node.js só para compilar os assets do Vite durante o build
-COPY --from=node:22-bookworm-slim /usr/local/bin/node /usr/local/bin/node
-COPY --from=node:22-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
-RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
-
 COPY composer.json composer.lock ./
 RUN composer install \
     --no-dev \
@@ -36,17 +31,7 @@ RUN mkdir -p \
         bootstrap/cache \
     && composer dump-autoload --no-dev --classmap-authoritative
 
-# Variáveis VITE_* entram no build do front (o .env não vai para a imagem)
-ENV VITE_APP_NAME="Diário de Cuidados"
-
-# Compila os assets (Vite) se o projeto tiver package.json; depois descarta node_modules
-# (npm install funciona com ou sem package-lock.json)
-RUN set -e; \
-    if [ -f package.json ]; then \
-      npm install --no-audit --no-fund; \
-      npm run build; \
-      rm -rf node_modules; \
-    fi
+# O front não tem build: o CSS fica pronto em public/css/app.css
 
 # Caches que não dependem de variáveis de ambiente (NÃO use config:cache aqui)
 RUN php artisan event:cache && php artisan view:cache
@@ -66,7 +51,10 @@ ENV PORT=80 \
     LOG_CHANNEL=stderr \
     SESSION_DRIVER=database \
     CACHE_STORE=database \
-    QUEUE_CONNECTION=sync
+    QUEUE_CONNECTION=sync \
+    DB_CONNECTION=mysql \
+    MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt \
+    SESSION_SECURE_COOKIE=true
 
 USER www-data
 
