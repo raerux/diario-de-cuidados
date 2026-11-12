@@ -31,7 +31,7 @@ class RelatorioTest extends TestCase
 
     public function test_exige_login(): void
     {
-        $this->get(route('idosos.relatorio', $this->idoso))->assertRedirect(route('cadastro'));
+        $this->get(route('idosos.relatorio', $this->idoso))->assertRedirect(route('dashboard'));
     }
 
     public function test_relatorio_vazio_abre_sem_erros(): void

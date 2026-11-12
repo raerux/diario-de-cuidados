@@ -9,6 +9,14 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
+// Endereço principal: apresentação do sistema para quem não está conectado,
+// tela "Hoje" para quem está.
+Route::get('/', function () {
+    return auth()->check()
+        ? app()->call(DashboardController::class)
+        : view('inicio');
+})->name('dashboard');
+
 Route::middleware('guest')->group(function () {
     Route::get('/cadastrar', [CadastroController::class, 'create'])->name('cadastro');
     Route::post('/cadastrar', [CadastroController::class, 'store'])
@@ -23,8 +31,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/sair', [AuthController::class, 'destroy'])->name('logout');
-
-    Route::get('/', DashboardController::class)->name('dashboard');
 
     Route::get('idosos/{idoso}/relatorio', RelatorioController::class)->name('idosos.relatorio');
     Route::resource('idosos', IdosoController::class)

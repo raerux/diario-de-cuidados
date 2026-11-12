@@ -10,10 +10,37 @@ class AcessoTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_visitante_e_levado_para_a_tela_de_cadastro(): void
+    public function test_visitante_ve_a_apresentacao_do_sistema(): void
     {
-        $this->get('/')->assertRedirect(route('cadastro'));
-        $this->get(route('idosos.index'))->assertRedirect(route('cadastro'));
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('O cuidado de quem você ama')
+            ->assertSee(route('cadastro'))
+            ->assertSee(route('login'));
+    }
+
+    public function test_visitante_em_pagina_interna_volta_para_a_apresentacao(): void
+    {
+        $this->get(route('idosos.index'))->assertRedirect(route('dashboard'));
+    }
+
+    public function test_quem_esta_conectado_ve_a_tela_hoje_no_endereco_principal(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get('/')
+            ->assertOk()
+            ->assertSee('<h1>Hoje</h1>', false)
+            ->assertDontSee('O cuidado de quem você ama');
+    }
+
+    public function test_depois_de_entrar_volta_para_a_pagina_que_tentou_abrir(): void
+    {
+        $usuario = User::factory()->create(['password' => bcrypt('senha-segura')]);
+
+        $this->get(route('idosos.index'));
+
+        $this->post(route('login.store'), ['email' => $usuario->email, 'password' => 'senha-segura'])
+            ->assertRedirect(route('idosos.index'));
     }
 
     public function test_tela_de_entrar_aparece(): void
