@@ -14,7 +14,7 @@ use Illuminate\Database\Seeder;
 class DadosExemploSeeder extends Seeder
 {
     /**
-     * Quatro idosos e seis dias de registros de exemplo, para conhecer o sistema.
+     * Quatro idosos e duas semanas de registros de exemplo, para conhecer o sistema.
      * Não faz nada se já houver idosos cadastrados.
      */
     public function run(): void
@@ -126,7 +126,7 @@ class DadosExemploSeeder extends Seeder
         $responsaveis = ['Ana Paula', 'Raimunda', 'Carlos'];
         $agora = now();
 
-        foreach (range(5, 0) as $diasAtras) {
+        foreach (range(13, 0) as $diasAtras) {
             $dia = today()->subDays($diasAtras);
 
             foreach ($rotinas as $indice => [$idoso, $eventos]) {
@@ -157,6 +157,26 @@ class DadosExemploSeeder extends Seeder
                         $dados['status'] = StatusCuidado::NaoRealizado;
                         $dados['descricao'] = 'Caminhada não feita: choveu forte a tarde toda.';
                         $dados['observacoes'] = 'Fez 10 minutos de alongamento sentado no lugar.';
+                    }
+
+                    // Uma dose recusada, para aparecer no relatório de medicação.
+                    if ($diasAtras === 4 && $idoso->is($maria) && $hora === '20:00') {
+                        $dados['status'] = StatusCuidado::NaoRealizado;
+                        $dados['descricao'] = 'Não tomou a Losartana da noite.';
+                        $dados['observacoes'] = 'Estava enjoada depois do jantar e recusou. Avisada a filha.';
+                    }
+
+                    // Uma dose que ficou sem registro (continua pendente).
+                    if ($diasAtras === 9 && $idoso->is($benedita) && $hora === '21:00') {
+                        $dados['status'] = StatusCuidado::Pendente;
+                    }
+
+                    // Observações do dia a dia.
+                    if ($diasAtras === 6 && $idoso->is($benedita) && $hora === '06:00') {
+                        $dados['observacoes'] = 'Noite agitada, chamou pela mãe várias vezes.';
+                    }
+                    if ($diasAtras === 3 && $idoso->is($jose) && $tipo === TipoCuidado::SinaisVitais) {
+                        $dados['observacoes'] = 'Comeu um pedaço de bolo no aniversário do neto na noite anterior.';
                     }
 
                     $this->registrar($dados, $admin);

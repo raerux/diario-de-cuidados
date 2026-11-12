@@ -18,6 +18,7 @@
             @if ($idoso->ativo)
                 <a class="botao botao-principal" href="{{ route('cuidados.create', ['idoso' => $idoso->id]) }}">Registrar cuidado</a>
             @endif
+            <a class="botao" href="{{ route('idosos.relatorio', $idoso) }}">Relatório para consulta</a>
             <a class="botao" href="{{ route('idosos.edit', $idoso) }}">Editar cadastro</a>
         </div>
     </div>
@@ -99,6 +100,9 @@
                             <li @class(['fora' => $sinal['fora']])>{{ $sinal['rotulo'] }} <strong>{{ $sinal['valor'] }}</strong></li>
                         @endforeach
                     </ul>
+                    <p class="ultimos-sinais-mais">
+                        <a href="{{ route('idosos.relatorio', $idoso) }}">Ver a evolução em gráficos e o relatório para a consulta</a>
+                    </p>
                 </section>
             @endif
 

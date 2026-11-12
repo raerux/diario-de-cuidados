@@ -906,3 +906,337 @@ input:focus, select:focus, textarea:focus {
   .topo, .acoes, .registro-acoes, .filtros, .paginacao, .filtro-tipos { display: none !important; }
   body { background: #fff; }
 }
+
+/* ---------- Relatório para consulta ---------- */
+
+.ultimos-sinais-mais { margin-top: 12px; font-size: var(--t-pequeno); }
+
+.seletor-periodo {
+  display: inline-flex;
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--folha);
+}
+.seletor-periodo a {
+  padding: 10px 14px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--texto);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.seletor-periodo a + a { border-left: 1px solid var(--linha-forte); }
+.seletor-periodo a:hover { background: var(--tinta-clara); }
+.seletor-periodo a[aria-current="true"] { background: var(--tinta); color: #fff; }
+
+.relatorio {
+  background: var(--folha);
+  border: 1px solid var(--linha);
+  border-top: 6px solid var(--tinta);
+  border-radius: var(--raio-painel);
+  padding: 28px 32px 24px;
+}
+
+.relatorio-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--linha);
+}
+.relatorio-sobretitulo {
+  font-size: var(--t-pequeno);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-suave);
+}
+.relatorio-nome { font-size: var(--t-grande); margin-top: 4px; }
+.relatorio-identificacao { color: var(--texto-suave); margin-top: 4px; }
+.relatorio-periodo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+}
+.relatorio-periodo strong { font-size: var(--t-medio); color: var(--tinta); }
+.relatorio-periodo .meta { color: var(--texto-suave); font-size: var(--t-pequeno); }
+
+.relatorio-saude {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.relatorio-caixa {
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 12px 14px;
+}
+.relatorio-caixa h3 { font-size: var(--t-pequeno); color: var(--texto-suave); font-weight: 600; }
+.relatorio-caixa p { margin-top: 4px; white-space: pre-line; }
+.relatorio-alergia {
+  background: var(--alerta-fundo);
+  border-color: var(--alerta-borda);
+  border-left: 5px solid var(--alerta);
+}
+.relatorio-alergia h3, .relatorio-alergia p { color: var(--alerta); font-weight: 700; }
+
+.relatorio-secao { margin-top: 32px; }
+.relatorio-titulo {
+  font-size: var(--t-medio);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--tinta);
+}
+.relatorio-explicacao { color: var(--texto-suave); font-size: var(--t-pequeno); margin: -4px 0 14px; max-width: 80ch; }
+
+.pontos-atencao { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pontos-atencao li {
+  position: relative;
+  padding: 10px 14px 10px 40px;
+  border-radius: var(--raio);
+  border: 1px solid var(--linha);
+}
+.pontos-atencao li::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 0.95em;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--linha-forte);
+}
+.pontos-atencao .ponto-alerta { background: var(--alerta-fundo); border-color: var(--alerta-borda); }
+.pontos-atencao .ponto-alerta::before { background: var(--alerta); }
+.pontos-atencao .ponto-falha { background: #fbf4f3; border-color: #ebc9c4; }
+.pontos-atencao .ponto-falha::before { background: var(--perigo); border-radius: 2px; }
+.pontos-atencao .ponto-ok { background: var(--acao-clara); border-color: #a9d3c4; }
+.pontos-atencao .ponto-ok::before { background: var(--acao); }
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+.numeros > div {
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.numeros dt { font-size: var(--t-pequeno); color: var(--texto-suave); font-weight: 600; }
+.numeros dd { margin: 4px 0 0; font-size: 2rem; font-weight: 700; line-height: 1.1; color: var(--tinta); }
+.numeros span { font-size: var(--t-pequeno); color: var(--texto-suave); }
+.numeros .numero-alerta dd { color: var(--alerta); }
+
+/* Gráficos dos sinais vitais */
+.sinais-graficos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.sinal-cartao {
+  margin: 0;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 14px 16px 12px;
+  break-inside: avoid;
+}
+.sinal-cartao h4 { margin: 0; font-size: var(--t-base); color: var(--tinta); }
+.unidade-sinal { font-weight: 400; color: var(--texto-suave); font-size: var(--t-pequeno); }
+.sinal-numeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin: 6px 0 8px;
+}
+.sinal-numeros dt { font-size: 0.75rem; color: var(--texto-suave); }
+.sinal-numeros dd { margin: 0; font-weight: 700; font-size: var(--t-base); }
+.sinal-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-size: 0.8125rem;
+  color: var(--texto-suave);
+  margin-top: 4px;
+}
+.texto-alerta { color: var(--alerta) !important; font-weight: 700; }
+
+.grafico { display: block; width: 100%; height: auto; overflow: visible; }
+.grafico-faixa { fill: var(--acao-clara); }
+.grafico-grade { stroke: var(--linha); stroke-width: 1; }
+.grafico-eixo { fill: var(--texto-suave); font-size: 11px; font-family: var(--fonte); }
+.grafico-linha { fill: none; stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; }
+.grafico-ponto { stroke-width: 2; fill: var(--folha); }
+.grafico-linha.serie-1 { stroke: var(--tinta); }
+.grafico-ponto.serie-1 { stroke: var(--tinta); }
+.grafico-linha.serie-2 { stroke: #7b97bd; stroke-dasharray: 5 4; }
+.grafico-ponto.serie-2 { stroke: #7b97bd; }
+.grafico-ponto.fora { fill: var(--alerta); stroke: var(--alerta); }
+.grafico-ponto:hover { stroke-width: 4; }
+
+.legenda { display: inline-flex; align-items: center; gap: 6px; }
+.legenda::before { content: ""; width: 18px; height: 0; border-top: 2.5px solid var(--tinta); }
+.legenda.serie-2::before { border-top: 2.5px dashed #7b97bd; }
+
+/* Medicação dia a dia */
+.tabela-remedios th[scope="row"] { font-weight: 700; min-width: 10rem; }
+.tabela-remedios th[scope="row"] .meta { display: block; font-weight: 400; color: var(--texto-suave); font-size: var(--t-pequeno); }
+.coluna-adesao { width: 11rem; }
+.coluna-adesao strong { font-size: var(--t-medio); color: var(--acao-escura); }
+.barra {
+  display: block;
+  height: 6px;
+  margin: 4px 0;
+  background: var(--linha);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.barra > span { display: block; height: 100%; background: var(--acao); }
+.coluna-calendario { width: 100%; min-width: 16rem; }
+
+.calendario {
+  display: grid;
+  grid-template-columns: repeat(var(--dias), minmax(0, 1fr));
+  gap: 3px;
+  max-width: calc(var(--dias) * 30px);
+}
+.calendario > span {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  min-width: 6px;
+}
+.calendario-cabecalho > span {
+  aspect-ratio: auto;
+  font-size: 0.6875rem;
+  text-align: center;
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+.dia-ok { background: var(--acao); }
+.dia-parcial { background: linear-gradient(135deg, var(--acao) 50%, #e9a23b 50%); }
+.dia-falha { background: var(--perigo); }
+.dia-vazio { background: #eef1f4; box-shadow: inset 0 0 0 1px var(--linha); }
+.chave-dia {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: -1px;
+  margin-left: 6px;
+}
+
+/* Rotina por tipo */
+.rotina { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.rotina li {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr) 8rem;
+  gap: 14px;
+  align-items: center;
+}
+.rotina-nome { font-weight: 600; color: var(--cor-tipo); }
+.rotina-barra { height: 14px; background: #eef1f4; border-radius: 3px; overflow: hidden; }
+.rotina-barra > span { display: block; height: 100%; background: var(--cor-tipo); border-radius: 3px; }
+.rotina-total .meta { color: var(--texto-suave); font-size: var(--t-pequeno); margin-left: 6px; }
+
+/* Ocorrências */
+.ocorrencias { list-style: none; margin: 0; padding: 0; }
+.ocorrencias li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px 0 12px 14px;
+  border-top: 1px solid var(--linha);
+  border-left: 4px solid var(--linha-forte);
+  break-inside: avoid;
+}
+.ocorrencias li:first-child { border-top: 0; }
+.ocorrencias .ocorrencia-alerta { border-left-color: var(--alerta); }
+.ocorrencias .ocorrencia-falha { border-left-color: var(--perigo); }
+.ocorrencias .ocorrencia-alerta strong { color: var(--alerta); }
+.ocorrencias .ocorrencia-falha strong { color: var(--perigo); }
+.ocorrencia-quando { font-weight: 700; line-height: 1.3; }
+.ocorrencia-quando small { display: block; font-weight: 400; color: var(--texto-suave); }
+.ocorrencias p { margin-top: 2px; white-space: pre-line; }
+.ocorrencias .meta { color: var(--texto-suave); font-size: var(--t-pequeno); }
+
+.relatorio-rodape {
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: 1px solid var(--linha);
+  color: var(--texto-suave);
+  font-size: var(--t-pequeno);
+}
+.relatorio-rodape p + p { margin-top: 4px; }
+
+@media (max-width: 960px) {
+  .sinais-graficos { grid-template-columns: minmax(0, 1fr); }
+  .numeros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .relatorio { padding: 20px 16px; margin: 0 -4px; }
+  .relatorio-periodo { align-items: flex-start; text-align: left; }
+  .relatorio-saude { grid-template-columns: minmax(0, 1fr); }
+  .numeros dd { font-size: 1.6rem; }
+  .rotina li { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+  .rotina-barra { grid-column: 1 / -1; grid-row: 2; }
+  .seletor-periodo { width: 100%; }
+  .seletor-periodo a { flex: 1; justify-content: center; white-space: nowrap; padding: 10px 8px; }
+  .cabecalho-pagina .acoes > .botao { width: 100%; }
+
+  /* Gráficos encolhem na tela pequena: letras e linhas maiores para continuar legíveis */
+  .grafico-eixo { font-size: 20px; }
+  .grafico-linha { stroke-width: 3.5; }
+  .grafico-ponto { stroke-width: 3; r: 6px; }
+  .grafico-ponto.fora { r: 8px; }
+
+  /* Medicação: cada remédio vira um cartão, com o calendário na largura toda */
+  .tabela-remedios thead { display: none; }
+  .tabela-remedios tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 12px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--linha);
+  }
+  .tabela-remedios tbody tr:first-child { border-top: 0; }
+  .tabela-remedios th, .tabela-remedios td { padding: 0; border: 0; }
+  .tabela-remedios th[scope="row"] { min-width: 0; }
+  .coluna-adesao { width: auto; text-align: right; }
+  .coluna-calendario { grid-column: 1 / -1; min-width: 0; }
+  .coluna-calendario .calendario-limites { display: flex; }
+}
+
+.calendario-limites {
+  display: none;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+  margin-top: 4px;
+}
+
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+  .nao-imprimir, .aviso { display: none !important; }
+  .pagina { padding: 0; max-width: none; }
+  .relatorio { border: 0; border-top: 4px solid var(--tinta); border-radius: 0; padding: 12px 0 0; }
+  .relatorio a { color: inherit; text-decoration: none; }
+  .relatorio-secao { margin-top: 20px; break-inside: auto; }
+  .relatorio-titulo { break-after: avoid; }
+  .sinais-graficos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .numeros { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .relatorio-saude { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tabela-envoltorio { overflow: visible; border: 0; }
+  .tabela-remedios tr { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

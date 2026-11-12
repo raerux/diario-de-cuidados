@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CuidadoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IdosoController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', DashboardController::class)->name('dashboard');
 
+    Route::get('idosos/{idoso}/relatorio', RelatorioController::class)->name('idosos.relatorio');
     Route::resource('idosos', IdosoController::class)
         ->parameters(['idosos' => 'idoso']);
 
