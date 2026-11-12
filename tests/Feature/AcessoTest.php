@@ -30,9 +30,21 @@ class AcessoTest extends TestCase
         $this->post(route('login.store'), [
             'email' => $usuario->email,
             'password' => 'senha-segura',
-        ])->assertRedirect(route('dashboard'));
+        ])->assertRedirect(route('usuarios.create'));
 
         $this->assertAuthenticatedAs($usuario);
+    }
+
+    public function test_depois_de_entrar_vai_para_o_cadastro_mesmo_vindo_de_outra_pagina(): void
+    {
+        $usuario = User::factory()->create(['password' => bcrypt('senha-segura')]);
+
+        $this->get(route('idosos.index'))->assertRedirect(route('login'));
+
+        $this->post(route('login.store'), [
+            'email' => $usuario->email,
+            'password' => 'senha-segura',
+        ])->assertRedirect(route('usuarios.create'));
     }
 
     public function test_senha_errada_nao_entra(): void
