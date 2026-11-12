@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Na Vercel o app fica atrás de um proxy HTTPS; sem isso, CSS e links
         // sairiam com http:// e o navegador bloquearia (conteúdo misto).
         $middleware->trustProxies(at: '*');
+
+        // Quem chega sem estar conectado vê primeiro a tela de criar o próprio acesso
+        // (que tem o link "Já tenho acesso" para o login).
+        $middleware->redirectGuestsTo(fn () => route('cadastro'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

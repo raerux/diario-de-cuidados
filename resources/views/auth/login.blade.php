@@ -45,6 +45,8 @@
 
                 <button type="submit" class="botao botao-principal">Entrar</button>
             </form>
+
+            <p class="troca-acesso">Ainda não tem acesso? <a href="{{ route('cadastro') }}">Criar acesso</a></p>
         </div>
     </main>
 </body>

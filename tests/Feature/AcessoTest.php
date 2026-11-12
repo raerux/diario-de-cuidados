@@ -10,10 +10,10 @@ class AcessoTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_visitante_e_levado_para_a_tela_de_entrar(): void
+    public function test_visitante_e_levado_para_a_tela_de_cadastro(): void
     {
-        $this->get('/')->assertRedirect(route('login'));
-        $this->get(route('idosos.index'))->assertRedirect(route('login'));
+        $this->get('/')->assertRedirect(route('cadastro'));
+        $this->get(route('idosos.index'))->assertRedirect(route('cadastro'));
     }
 
     public function test_tela_de_entrar_aparece(): void
@@ -30,21 +30,9 @@ class AcessoTest extends TestCase
         $this->post(route('login.store'), [
             'email' => $usuario->email,
             'password' => 'senha-segura',
-        ])->assertRedirect(route('usuarios.create'));
+        ])->assertRedirect(route('dashboard'));
 
         $this->assertAuthenticatedAs($usuario);
-    }
-
-    public function test_depois_de_entrar_vai_para_o_cadastro_mesmo_vindo_de_outra_pagina(): void
-    {
-        $usuario = User::factory()->create(['password' => bcrypt('senha-segura')]);
-
-        $this->get(route('idosos.index'))->assertRedirect(route('login'));
-
-        $this->post(route('login.store'), [
-            'email' => $usuario->email,
-            'password' => 'senha-segura',
-        ])->assertRedirect(route('usuarios.create'));
     }
 
     public function test_senha_errada_nao_entra(): void

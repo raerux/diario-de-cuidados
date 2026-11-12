@@ -32,10 +32,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        // Depois de entrar, a pessoa vai sempre primeiro para o cadastro de acessos.
-        $request->session()->forget('url.intended');
-
-        return redirect()->route('usuarios.create');
+        return redirect()->intended(route('dashboard'));
     }
 
     public function destroy(Request $request): RedirectResponse

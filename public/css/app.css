@@ -858,6 +858,15 @@ input:focus, select:focus, textarea:focus {
 .cartao-entrar .marca { color: var(--tinta); margin-bottom: 20px; }
 .cartao-entrar h1 { font-size: var(--t-grande); margin-bottom: 20px; }
 .cartao-entrar .botao { width: 100%; margin-top: 8px; }
+.cartao-entrar h1 + .cartao-explicacao { margin: -12px 0 20px; color: var(--texto-suave); }
+.troca-acesso {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--linha);
+  text-align: center;
+  color: var(--texto-suave);
+}
+.troca-acesso a { font-weight: 600; }
 
 /* ---------- Telas menores ---------- */
 

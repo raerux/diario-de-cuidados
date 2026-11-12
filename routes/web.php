@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\CuidadoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IdosoController;
@@ -9,6 +10,11 @@ use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    Route::get('/cadastrar', [CadastroController::class, 'create'])->name('cadastro');
+    Route::post('/cadastrar', [CadastroController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('cadastro.store');
+
     Route::get('/entrar', [AuthController::class, 'create'])->name('login');
     Route::post('/entrar', [AuthController::class, 'store'])
         ->middleware('throttle:6,1')
